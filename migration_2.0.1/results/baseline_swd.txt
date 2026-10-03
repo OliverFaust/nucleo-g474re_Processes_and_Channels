@@ -1,0 +1,6 @@
+stack  Sender        1024 B: used   216 B, never touched   808 B
+stack  Receiver      1024 B: used   532 B, never touched   492 B
+thread Sender       priority  2  name "Sender"
+thread Receiver     priority  2  name "Receiver"
+FreeRTOS heap: free 20152 B, minimum ever free 20152 B, allocations 5, frees 0
+newlib sbrk: __sbrk_heap_end = 0x20009708 (_end = 0x20009300)
