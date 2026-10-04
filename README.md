@@ -115,9 +115,11 @@ Measured on the board (Debug and Release, after 20 s):
 - **Program hangs**: The rendezvous channel blocks forever if only one process runs. Ensure both `Sender` and `Receiver` are included in `InParallel`.
 - **`configASSERT failed: <file>:<line>`** on the console: a FreeRTOS assertion failed at that source line; the program halts there.
 
-## License
+## License and Declaration
 
 MIT License – see the `LICENSE` file. CSP4CMSIS: MIT License, `lib/csp4cmsis/LICENSE`.
+
+Development of this project utilizes AI coding assistants for boilerplate generation, unit test creation, and architectural drafting. All core logic is manually reviewed and verified.
 
 ## Acknowledgments
 
