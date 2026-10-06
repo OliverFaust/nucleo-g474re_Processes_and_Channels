@@ -5,7 +5,7 @@ A minimal demonstration of the **CSP (Communicating Sequential Processes)** libr
 ## Features
 
 - **FreeRTOS** with the CMSIS‑RTOS v2 API (STM32CubeMX `CMSIS_V2` interface)
-- **CSP4CMSIS 2.0.1** library for channel‑based, deterministic concurrency
+- **CSP4CMSIS 3.0.0** library for channel‑based, deterministic concurrency
 - **Rendezvous synchronisation** – sender and receiver meet exactly at each message exchange
 - **No FreeRTOS heap allocation**: every thread's stack and control block is static (see [Memory](#memory))
 - **Roll‑over counter** – `unsigned int` wraps from `UINT_MAX` to `0` automatically
@@ -26,7 +26,7 @@ Tested with:
 | STM32CubeIDE | 2.1.0 (GNU Tools for STM32 14.3.rel1) |
 | STM32CubeMX (only to regenerate code) | 6.17.0 |
 | STM32Cube FW_G4 | V1.6.3 (FreeRTOS 10.3.1) |
-| CSP4CMSIS | 2.0.1, in `lib/csp4cmsis/` (unmodified; see `lib/csp4cmsis/VERSION`) |
+| CSP4CMSIS | 3.0.0, in `lib/csp4cmsis/` (unmodified; see `lib/csp4cmsis/VERSION`) |
 
 ## Serial Configuration
 
@@ -47,7 +47,7 @@ Tested with:
 5. Build the project (configuration `Debug` or `Release`).  
 6. Flash the binary to your Nucleo board.
 
-The CSP4CMSIS settings are already in the project (G++ compiler, Debug and Release): include path `../lib/csp4cmsis/inc`, and the defines `CSP4CMSIS_RTOS2_BACKEND_FREERTOS`, `CSP4CMSIS_MAX_SYSCALL_INTERRUPT_PRIORITY=5`, `CSP4CMSIS_STATIC_ALLOCATION` and `CSP4CMSIS_DEVICE_HEADER="stm32g4xx.h"` (explained in the [CSP4CMSIS STM32CubeIDE guide](https://github.com/OliverFaust/CSP4CMSIS/blob/main/Documentation/CSP4CMSIS_STM32CubeIDE.md)).
+The CSP4CMSIS settings are already in the project (G++ compiler, Debug and Release): include path `../lib/csp4cmsis/inc`, and the two defines `CSP4CMSIS_MAX_SYSCALL_INTERRUPT_PRIORITY=5` and `CSP4CMSIS_DEVICE_HEADER="stm32g4xx.h"`; CSP4CMSIS allocates its RTOS objects statically by default and finds FreeRTOS from `FreeRTOS.h` (explained in the [CSP4CMSIS STM32CubeIDE guide](https://github.com/OliverFaust/CSP4CMSIS/blob/main/Documentation/CSP4CMSIS_STM32CubeIDE.md)).
 
 ## Regenerating code with STM32CubeMX
 
@@ -58,7 +58,7 @@ The CSP4CMSIS settings are already in the project (G++ compiler, Debug and Relea
 ├── Core/            # main.c (CubeMX), application.cpp (the example)
 ├── Drivers/         # STM32 HAL, CMSIS and BSP drivers
 ├── Formal model/    # CSP-M model of the sender-receiver network
-├── lib/csp4cmsis/   # CSP4CMSIS 2.0.1 (inc/, src/, LICENSE, VERSION)
+├── lib/csp4cmsis/   # CSP4CMSIS 3.0.0 (inc/, src/, LICENSE, VERSION)
 ├── Middlewares/     # FreeRTOS + CMSIS‑RTOS v2
 ├── nucleo-g474re_v10.ioc  # STM32CubeMX project
 └── README.md
