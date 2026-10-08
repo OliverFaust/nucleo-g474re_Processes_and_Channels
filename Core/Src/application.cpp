@@ -60,7 +60,7 @@ static StaticTask_t mainAppControlBlock;
 void MainApp_Task(void* argument) {
   (void)argument;
   osDelay(10);
-  printf("\r\n--- Single Sender & Receiver with Infinite Loop ---\r\n");
+  printf("\r\n--- Single Sender & Receiver with Infinite Loop (Zero-Heap) ---\r\n");
 
   static Sender sender(chan.writer());
   static Receiver receiver(chan.reader());
