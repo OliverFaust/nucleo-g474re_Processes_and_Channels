@@ -8,3 +8,8 @@
 3. **Library version:** CSP4CMSIS 3.0.0 (stable 3.x API), unmodified in `lib/csp4cmsis/`.
 4. **Unchanged:** output, stacks (measured identical), priorities, memory (0 FreeRTOS heap allocations),
    CubeMX settings.
+5. **No heap at all (branch `unbuffered-stdout`):** `main.c` (USER CODE 2) makes `stdout` unbuffered with
+   `setvbuf(stdout, NULL, _IONBF, 0)`, so newlib's `printf()` no longer allocates its 1 KB `stdout` buffer:
+   `_sbrk()` is never called (measured), as in Alternation and the Sensor chapter. The start-up banner
+   becomes `--- Single Sender & Receiver with Infinite Loop (Zero-Heap) ---` (as in those two chapters), and the text can say that the program
+   allocates no heap memory at all (FreeRTOS heap: 0 allocations; C library heap: not used).
