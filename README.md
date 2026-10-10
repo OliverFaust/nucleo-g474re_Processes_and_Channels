@@ -51,7 +51,7 @@ The CSP4CMSIS settings are already in the project (G++ compiler, Debug and Relea
 
 ## Regenerating code with STM32CubeMX
 
-`nucleo-g474re_v10.ioc` can be opened and regenerated (GENERATE CODE) without losing anything: the application's code in `main.c` and `FreeRTOSConfig.h` sits between `USER CODE BEGIN`/`END` markers, and the FreeRTOS settings it needs (heap size, newlib reentrancy, static default task) are stored in the `.ioc`.
+`nucleo-g474re_v10.ioc` can be opened and regenerated (GENERATE CODE): the application's code in `main.c` and `FreeRTOSConfig.h` sits between `USER CODE BEGIN`/`END` markers, and the FreeRTOS settings it needs (heap size, newlib reentrancy, static default task) are stored in the `.ioc`. defaultTask was removed from main.c; if you regenerate the project with CubeMX, delete it again.
 
 ## Project Structure
 ```text
@@ -66,7 +66,7 @@ The CSP4CMSIS settings are already in the project (G++ compiler, Debug and Relea
 
 ## How It Works
 
-1. **Channel**: `static Channel<MessageType> chan;` – a blocking rendezvous channel with zero capacity, for one writer and one reader. Elements are copied, so the element type must be trivially copyable (`unsigned int` is).  
+1. **Channel**: `static Channel<unsigned int> chan;` – a blocking rendezvous channel with zero capacity, for one writer and one reader. Elements are copied, so the element type must be trivially copyable (`unsigned int` is).  
 2. **Sender process**: runs an infinite loop, sending the current value of `counter` through `out << counter`. The send operation blocks until the receiver has taken the value. After sending, `counter` increments (rolls over automatically).  
 3. **Receiver process**: runs an infinite loop, waiting for a message with `in >> received`. The receive operation blocks until the sender has sent a value. Once received, it prints `Send: X Received: X`: only the receiver prints, and it prints the value it received twice – because of the rendezvous, that is exactly the value the sender sent.  
 4. **Parallel composition**: `InParallel(sender, receiver)` composes both processes; `Run(..., ExecutionMode::StaticNetwork, priority)` creates their threads and returns, and the network runs for ever.  
@@ -96,7 +96,7 @@ Send: 0 Received: 0
 
 Measured on the board (Debug and Release, after 20 s):
 
-- **FreeRTOS heap: not used.** `pvPortMalloc()` is never called (0 allocations). `Sender`, `Receiver`, `MainApp`, CubeMX's `defaultTask`, and FreeRTOS's idle and timer tasks all have static stacks and control blocks; the channel needs no RTOS objects of its own. The FreeRTOS heap (`configTOTAL_HEAP_SIZE`) is therefore set to only 1 KB: enough for one small dynamically created thread (a 128‑word stack and its control block) if you switch one back to dynamic allocation.
+- **FreeRTOS heap: not used.** `pvPortMalloc()` is never called (0 allocations). `Sender`, `Receiver`, `MainApp`, and FreeRTOS's idle and timer tasks all have static stacks and control blocks; the channel needs no RTOS objects of its own. The FreeRTOS heap (`configTOTAL_HEAP_SIZE`) is therefore set to only 1 KB: enough for one small dynamically created thread (a 128‑word stack and its control block) if you switch one back to dynamic allocation.
 - **C library heap: not used.** `main.c` (USER CODE 2) makes `stdout` unbuffered with `setvbuf(stdout, NULL, _IONBF, 0)`; otherwise newlib's `printf()` would `malloc()` a 1 KB `stdout` buffer on first use (measured: 1032 B). With it, `_sbrk()` is never called.
 - So the program allocates no heap memory at all: the "(Zero-Heap)" in the start-up banner is literal.
 - **Stacks used** (Debug; Release in brackets): `Sender` 320 B (212 B) of 1 KB, `Receiver` 532 B (492 B) of 1 KB, `MainApp` 500 B (300 B) of 1 KB, `defaultTask` 128 B (96 B) of 2 KB.
