@@ -13,3 +13,18 @@
    `_sbrk()` is never called (measured), as in Alternation and the Sensor chapter. The start-up banner
    becomes `--- Single Sender & Receiver with Infinite Loop (Zero-Heap) ---` (as in those two chapters), and the text can say that the program
    allocates no heap memory at all (FreeRTOS heap: 0 allocations; C library heap: not used).
+6. **Simplified listing (branch `simplify-chapter-code`):** the code shows the chapter's concept and
+   nothing else.
+   - `using MessageType = unsigned int;` is gone: the channel and the ends are `Channel<unsigned int>`,
+     `Chanout<unsigned int>`, `Chanin<unsigned int>`.
+   - `Sender` and `Receiver` lose their `name()` overrides; the constructors are `explicit`; the Sender
+     writes `out << counter++;`.
+   - **`main.c`:** CubeMX's `defaultTask` is removed (its attributes, its creation, `StartDefaultTask`).
+     The program's threads are now exactly the ones in `application.cpp` (MainApp and the processes),
+     plus FreeRTOS's idle and timer tasks. The `.ioc` still contains the task: CubeMX does not allow a
+     project without one and re-creates it on regeneration (from the `.ioc`, as the static, heap-free
+     task it was); the README says to delete it again.
+   - **Thread names:** without the `name()` overrides, the processes appear as `csp_task` in a
+     debugger's thread view; MainApp keeps its name (`attr.name`).
+   - **Comments** shortened to what is surprising; the explanations are in the chapter text.
+   - The console output is unchanged.
